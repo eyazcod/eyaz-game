@@ -232,7 +232,7 @@ window.addEventListener('keydown',e=>key(e,true));window.addEventListener('keyup
 document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys[b.dataset.key]=true});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys[b.dataset.key]=false)});$('bombButton').onclick=throwBomb;$('ability').onclick=()=>useAbility(stage>=6?'heal':stage>=5?'pulse':stage>=2?'shield':'dash');$('fire').onclick=fireLaser;canvas.addEventListener('contextmenu',e=>e.preventDefault());canvas.addEventListener('pointerdown',e=>{if(e.button===fireMouse){e.preventDefault();mouseFiring=true;fireLaser()}});window.addEventListener('pointerup',()=>mouseFiring=false);window.addEventListener('pointercancel',()=>mouseFiring=false);$('start').onclick=start;$('restart').onclick=()=>{if(mode==='lost'){start();return}reset(false);mode='playing';hide()};reset();requestAnimationFrame(frame);
 
 // Campaign save schema 1: resume at the last safe checkpoint, never mid-jump.
-const BUILD_VERSION='0.4.0';
+const BUILD_VERSION='0.5.0';
 const SAVE_KEY='eyaz-campaign-v1';
 let campaignSave=null,saveEnabled=true;
 function readCampaign(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(s&&s.schema===1&&Number.isInteger(s.stage)&&s.stage>=0&&s.stage<levels.length&&Number.isInteger(s.lives)&&s.lives>=1&&s.lives<=5&&Number.isInteger(s.checkpoint)&&s.checkpoint>=-1&&s.checkpoint<=0)return s}catch{}return null}
@@ -291,5 +291,55 @@ const goAdmin=$('adminGo').onclick;$('adminGo').onclick=()=>{ocean.hidden=true;g
 // The map is part of the fullscreen element; it remains accessible on touch screens.
 reset();islandMap();
 
+const bossStyles=[null,
+ {element:'مياه',color:'#68e8fa',title:'أمواج المد',hint:'موجات ماء متعرجة؛ اقفز بين الموجات.'},
+ {element:'مطر',color:'#e9e68d',title:'رعد العاصفة',hint:'الخط الأصفر يحدد مكان البرق؛ ابتعد عنه قبل الضربة.'},
+ {element:'نار',color:'#ff8a4b',title:'قذائف اللهب',hint:'كرات نارية بقوس تترك جمرًا عند ملامسة الأرض.'},
+ {element:'نيازك',color:'#c9a3ff',title:'وابل النيازك',hint:'علامات بنفسجية تنذر بسقوط النيازك؛ تحرك إلى الفراغات.'},
+ {element:'نيران',color:'#ffbb56',title:'اندفاع الحمم',hint:'قفز فوق اندفاع البوس، وابتعد عن فتحات اللهب.'},
+ {element:'صحراء',color:'#eed18c',title:'إعصار الرمال',hint:'الأعاصير تزحف عبر الأرض؛ استخدم المنصات العالية.'},
+ {element:'ثلوج',color:'#b6f5ff',title:'شظايا الصقيع',hint:'مراوح جليد متفرقة؛ إصابتها تبطئ الحركة مؤقتًا.'},
+ {element:'غابات',color:'#9ee784',title:'جذور الغابة',hint:'الجذور تحاصر الأرض؛ اقفز فوقها وتفادَ البذور.'},
+ {element:'فضاء',color:'#ddbeff',title:'مدارات النجوم',hint:'طلقات دائرية وأعمدة طاقة؛ راقب خطوط التحذير.'}
+];
+let bossHazards=[],bossSlow=0;
+const elementalReset=reset;reset=function(newRun=true){bossHazards=[];bossSlow=0;elementalReset(newRun)};
+function bossShot(x,y,vx,vy,kind,color,extra={}){shots.push({x,y,vx,vy,kind,color,w:16,h:16,life:230,age:0,...extra})}
+function groundWarning(x,w,kind,color,delay=45,duration=55){bossHazards.push({x:Math.max(0,Math.min(world-w,x)),y:kind==='lightning'||kind==='beam'?0:412,w,h:kind==='lightning'||kind==='beam'?450:38,kind,color,delay,life:duration})}
+function bossAttack(){if(!boss||boss.dead)return;const theme=bossStyles[stage],rage=boss.hp<=(7+stage)/2,phase=boss.attackPhase||0,originX=boss.x+32,originY=boss.y+20,angle=Math.atan2(player.y+22-originY,player.x+16-originX),dir=player.x<boss.x?-1:1;
+ if(stage===1){for(let i=0;i<(rage?3:2);i++)bossShot(originX,originY+i*30,dir*(4+i*.35),0,'water',theme.color,{baseY:originY+i*30,phase:i*2});}
+ if(stage===2){groundWarning(player.x-12,54,'lightning',theme.color);if(rage)groundWarning(player.x+(phase%2?125:-125),48,'lightning',theme.color,62,35);}
+ if(stage===3){for(let i=0;i<(rage?4:3);i++)bossShot(originX,originY,dir*(3+i*.65),-7-i*.55,'fire',theme.color,{gravity:.19});}
+ if(stage===4){for(let i=0;i<(rage?5:3);i++){const x=player.x-170+i*100;groundWarning(x,28,'meteorMark',theme.color,45+i*9,1)}}
+ if(stage===5){if(phase%2===0){boss.dashTicks=32;boss.dashDir=dir}else for(let i=0;i<3;i++)groundWarning(player.x-110+i*100,45,'lava',theme.color,45+i*8,65);}
+ if(stage===6){for(let i=0;i<(rage?3:2);i++)bossShot(originX,398-i*36,dir*(2.6+i*.4),0,'sand',theme.color,{w:30,h:50});}
+ if(stage===7){for(let i=-2;i<=2;i++)bossShot(originX,originY,Math.cos(angle+i*.28)*5.1,Math.sin(angle+i*.28)*5.1,'ice',theme.color,{slow:true});}
+ if(stage===8){if(phase%2===0){for(let i=0;i<(rage?4:3);i++)groundWarning(player.x-100+i*90,36,'vine',theme.color,50+i*6,80)}else for(let i=-1;i<=1;i++)bossShot(originX,originY,Math.cos(angle+i*.3)*4.5,Math.sin(angle+i*.3)*4.5,'seed',theme.color);}
+ if(stage===9){if(phase%2===0){const count=rage?12:8;for(let i=0;i<count;i++){const a=i*Math.PI*2/count+phase*.17;bossShot(originX,originY,Math.cos(a)*3.8,Math.sin(a)*3.8,'star',theme.color)}}else{groundWarning(player.x-20,48,'beam',theme.color,58,45);groundWarning(player.x+(phase%4===1?160:-160),48,'beam',theme.color,75,40)}}
+ boss.attackPhase=phase+1;playSound('stomp');
+}
+updateBoss=function(previousY){if(!boss||boss.dead){bossHazards=[];shots=[];bossSlow=0;return}const theme=bossStyles[stage];if(player.x>2250){boss.active=true;$('bossHud').hidden=false}if(boss.inv>0)boss.inv--;if(bossSlow>0){bossSlow--;player.vx*=.72}
+ if(boss.active){boss.timer++;const rage=boss.hp<=(7+stage)/2;const cycle=stage===9?145:stage===2?130:stage===6?135:115;
+ if(boss.dashTicks>0){boss.dashTicks--;boss.x+=boss.dashDir*9}else boss.x+=boss.dir*(stage===6?1.2:stage===9?1.5:2.1);if(boss.x<3000){boss.x=3000;boss.dir=1}if(boss.x>3310){boss.x=3310;boss.dir=-1}
+ boss.y=stage===3?388-Math.max(0,Math.sin(boss.timer*.032))*75:stage===9?340+Math.sin(boss.timer*.025)*35:388;
+ const beat=boss.timer%(rage?Math.round(cycle*.8):cycle);
+ const period=rage?Math.round(cycle*.8):cycle;boss.telegraph=beat>=period-38;
+ $('bossHint').textContent=boss.telegraph?'⚠ '+theme.title+' — '+theme.hint:theme.element+' · '+theme.hint;
+ if(beat===0)bossAttack();
+ if(overlap(player,boss)){if(previousY+player.h<=boss.y+18&&player.vy>0){player.vy=-11.5;player.ground=false;player.coyote=0;damageBoss(1)}else hurt()}}
+ for(const s of shots){s.age=(s.age||0)+1;s.x+=s.vx;s.vy+=(s.gravity||0);s.y+=s.vy;if(s.kind==='water')s.y=s.baseY+Math.sin(s.age*.08+s.phase)*32;s.life--;if(s.kind==='fire'&&s.y>=430){groundWarning(s.x-12,38,'ember',s.color,18,75);s.life=0}if(overlap(player,s)){const canHit=player.inv===0&&shieldTicks===0&&!(adminUnlocked&&(adminFlying||adminInvincible));hurt();if(canHit&&s.slow)bossSlow=100;s.life=0}}
+ shots=shots.filter(s=>s.life>0&&s.x>-40&&s.x<world+40&&s.y>-100&&s.y<600).slice(-90);
+ for(const z of bossHazards){if(z.delay>0){z.delay--;if(z.delay===0&&z.kind==='meteorMark'){bossShot(z.x,-30,0,7,'meteor',z.color,{w:28,h:28,gravity:.045});z.life=0}}else{z.life--;if(z.life>0&&overlap(player,z))hurt()}}
+ bossHazards=bossHazards.filter(z=>z.life>0).slice(-24);if(boss.dead){bossHazards=[];shots=[]}
+};
+const elementalDraw=drawBoss;drawBoss=function(){const projectiles=shots;shots=[];elementalDraw();shots=projectiles;if(!boss||boss.dead)return;const theme=bossStyles[stage];
+ if(boss.telegraph){ctx.fillStyle=theme.color;ctx.font='bold 22px Tahoma';ctx.fillText('⚠ '+theme.title,boss.x-45,boss.y-18)}
+ for(const s of shots){ctx.fillStyle=s.color;if(s.kind==='sand'){for(let i=0;i<5;i++)ctx.fillRect(s.x+Math.sin((s.age+i)*.25)*5+i*2,s.y+i*10,30-i*4,7)}else if(s.kind==='water'){ctx.fillRect(s.x,s.y,s.w+12,9);ctx.fillRect(s.x+5,s.y-5,16,19)}else if(s.kind==='ice'){ctx.beginPath();ctx.moveTo(s.x,s.y+8);ctx.lineTo(s.x+16,s.y);ctx.lineTo(s.x+16,s.y+16);ctx.closePath();ctx.fill()}else{ctx.fillRect(s.x,s.y,s.w,s.h);ctx.fillStyle='#fff2cf';ctx.fillRect(s.x+4,s.y+4,5,5)}}
+ for(const z of bossHazards){ctx.save();if(z.delay>0){ctx.globalAlpha=.35+.25*Math.sin(time*.25);ctx.fillStyle=z.color;ctx.fillRect(z.x,438,z.w,12);if(z.kind==='lightning'||z.kind==='beam'||z.kind==='meteorMark'){ctx.fillRect(z.x+z.w/2-2,30,4,400)}ctx.font='bold 20px Tahoma';ctx.fillText('!',z.x+z.w/2-4,420)}else{ctx.fillStyle=z.color;if(z.kind==='vine'){for(let i=0;i<z.w;i+=9)ctx.fillRect(z.x+i,z.y+(i%3)*4,6,z.h)}else if(z.kind==='lightning'){for(let y=0;y<450;y+=24)ctx.fillRect(z.x+(y%48?10:0),y,z.w-10,26)}else ctx.fillRect(z.x,z.y,z.w,z.h);ctx.globalAlpha=.7;ctx.fillStyle='#fff3d9';ctx.fillRect(z.x+z.w/2-3,z.y,6,z.h)}ctx.restore()}
+};
+const finalIslandMap=islandMap;islandMap=function(message){if(stage===levels.length-1&&clearedIslands.has(stage))message='ختمت إياز! شكرًا للعبك — انتظروا التحديثات القادمة والمابات الجديدة!';finalIslandMap(message);if(stage===levels.length-1&&clearedIslands.has(stage)){const ending=document.createElement('h2');ending.textContent='⛵ انتظروا التحديثات القادمة والمابات الجديدة';ocean.append(ending)}};
+const finaleKey=key;key=function(e,down){if(down&&e.code==='Enter'&&mode==='playing'&&stage===levels.length-1&&player.x+player.w>=3340&&boss?.dead&&!adminUnlocked){clearIsland();islandMap();return}finaleKey(e,down)};
+
+const elementalIntro=islandIntro;islandIntro=function(i){elementalIntro(i);if(mode==='intro'&&bossStyles[i]){const guide=document.createElement('p');guide.textContent=bossStyles[i].title+' — '+bossStyles[i].hint;ocean.append(guide)}};
 </script></body></html>
 
