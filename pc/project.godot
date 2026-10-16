@@ -1,0 +1,35 @@
+config_version=5
+
+[application]
+config/icon="res://assets/eyaz-icon.png"
+config/name="مغامرات إياز"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Godot/app_userdata/EYAZ — Crystal Archipelago"
+config/version="1.0.0-godot"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+DiscordPresence="*res://scripts/discord_presence.gd"
+
+[display]
+window/size/mode=3
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.04,0.08,0.13,1)
+
+[internationalization]
+locale/fallback="ar"
+
+[physics]
+common/physics_ticks_per_second=60
+

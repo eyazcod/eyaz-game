@@ -1,0 +1,6 @@
+.godot/
+build/
+*.tmp
+assets/*.otf
+assets/*.ttf
+native/*.exe

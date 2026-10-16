@@ -1,0 +1,437 @@
+{
+  "maps": [
+    {
+      "name": "ممرات الجليد",
+      "sections": [
+        "steps",
+        "bridge",
+        "valley",
+        "ridge",
+        "bridge",
+        "valley"
+      ],
+      "width": 145,
+      "gap": 88
+    },
+    {
+      "name": "أرصفة المد",
+      "sections": [
+        "bridge",
+        "valley",
+        "bridge",
+        "steps",
+        "valley",
+        "bridge",
+        "ridge"
+      ],
+      "width": 155,
+      "gap": 96
+    },
+    {
+      "name": "أبراج العاصفة",
+      "sections": [
+        "ridge",
+        "steps",
+        "valley",
+        "ridge",
+        "steps",
+        "bridge",
+        "ridge"
+      ],
+      "width": 130,
+      "gap": 100
+    },
+    {
+      "name": "حواف البركان",
+      "sections": [
+        "valley",
+        "ridge",
+        "valley",
+        "steps",
+        "ridge",
+        "valley",
+        "steps",
+        "bridge"
+      ],
+      "width": 128,
+      "gap": 108
+    },
+    {
+      "name": "حزام الحطام",
+      "sections": [
+        "ridge",
+        "bridge",
+        "steps",
+        "ridge",
+        "valley",
+        "ridge",
+        "bridge",
+        "steps"
+      ],
+      "width": 120,
+      "gap": 118
+    },
+    {
+      "name": "جسور الحمم",
+      "sections": [
+        "steps",
+        "valley",
+        "ridge",
+        "steps",
+        "valley",
+        "bridge",
+        "ridge",
+        "valley",
+        "steps"
+      ],
+      "width": 125,
+      "gap": 110
+    },
+    {
+      "name": "قمم الكثبان",
+      "sections": [
+        "valley",
+        "bridge",
+        "valley",
+        "ridge",
+        "bridge",
+        "steps",
+        "valley",
+        "bridge",
+        "ridge"
+      ],
+      "width": 160,
+      "gap": 104
+    },
+    {
+      "name": "سلالم الصقيع",
+      "sections": [
+        "steps",
+        "ridge",
+        "steps",
+        "valley",
+        "ridge",
+        "bridge",
+        "steps",
+        "ridge",
+        "valley"
+      ],
+      "width": 115,
+      "gap": 112
+    },
+    {
+      "name": "أغصان الغابة",
+      "sections": [
+        "ridge",
+        "valley",
+        "steps",
+        "bridge",
+        "ridge",
+        "steps",
+        "valley",
+        "ridge",
+        "bridge",
+        "steps"
+      ],
+      "width": 132,
+      "gap": 108
+    },
+    {
+      "name": "مدارات المحطة",
+      "sections": [
+        "bridge",
+        "ridge",
+        "valley",
+        "steps",
+        "bridge",
+        "valley",
+        "ridge",
+        "steps",
+        "valley",
+        "bridge"
+      ],
+      "width": 125,
+      "gap": 122
+    }
+  ],
+  "heights": {
+    "steps": [
+      375,
+      300,
+      225,
+      300
+    ],
+    "bridge": [
+      350,
+      350,
+      325,
+      350
+    ],
+    "valley": [
+      290,
+      365,
+      390,
+      315
+    ],
+    "ridge": [
+      350,
+      275,
+      220,
+      290
+    ]
+  },
+  "biomes": [
+    [
+      "ثلوج",
+      "#274254",
+      "#a5c7d2",
+      "#edf7fa"
+    ],
+    [
+      "مياه",
+      "#123b59",
+      "#269ea7",
+      "#62d5d3"
+    ],
+    [
+      "مطر",
+      "#202e42",
+      "#657a88",
+      "#8eada1"
+    ],
+    [
+      "نار",
+      "#3c171d",
+      "#be5130",
+      "#ce7947"
+    ],
+    [
+      "نيازك",
+      "#15132d",
+      "#463459",
+      "#9676ba"
+    ],
+    [
+      "نيران",
+      "#241215",
+      "#dc682b",
+      "#e9974d"
+    ],
+    [
+      "صحراء",
+      "#6c452c",
+      "#e3b36d",
+      "#f3d699"
+    ],
+    [
+      "ثلوج",
+      "#233450",
+      "#b4d5e0",
+      "#f2fcff"
+    ],
+    [
+      "غابات",
+      "#14392a",
+      "#579d67",
+      "#a0d975"
+    ],
+    [
+      "فضاء",
+      "#100f29",
+      "#44366b",
+      "#bce8ff"
+    ]
+  ],
+  "boss_names": [
+    "",
+    "Rock",
+    "Mr0",
+    "DrDr",
+    "VOi",
+    "krjma",
+    "Villo",
+    "EMSi",
+    "JOY BOY",
+    "Eyaz"
+  ],
+  "mini_names": [
+    "ناب الصقيع",
+    "حارس الرصيف",
+    "شرارة السحاب",
+    "جمر الصخر",
+    "شظية المدار",
+    "ناب الحمم",
+    "عقرب الرمال",
+    "ذئب الجليد",
+    "شوكة الغابة",
+    "طيف المحطة"
+  ],
+  "melodies": [
+    [
+      12,
+      null,
+      19,
+      22,
+      null,
+      19,
+      15,
+      null,
+      17,
+      null,
+      15,
+      10,
+      12,
+      null,
+      null,
+      null
+    ],
+    [
+      15,
+      null,
+      19,
+      null,
+      24,
+      22,
+      19,
+      null,
+      17,
+      15,
+      null,
+      12,
+      10,
+      null,
+      null,
+      null
+    ],
+    [
+      19,
+      null,
+      22,
+      24,
+      null,
+      26,
+      24,
+      22,
+      19,
+      null,
+      17,
+      15,
+      17,
+      null,
+      19,
+      null
+    ],
+    [
+      17,
+      null,
+      15,
+      12,
+      null,
+      10,
+      7,
+      null,
+      10,
+      12,
+      null,
+      15,
+      12,
+      null,
+      null,
+      null
+    ],
+    [
+      24,
+      null,
+      22,
+      19,
+      22,
+      null,
+      19,
+      15,
+      17,
+      null,
+      19,
+      22,
+      19,
+      null,
+      null,
+      null
+    ],
+    [
+      15,
+      null,
+      17,
+      19,
+      null,
+      22,
+      24,
+      null,
+      22,
+      19,
+      17,
+      null,
+      15,
+      null,
+      12,
+      null
+    ],
+    [
+      19,
+      22,
+      null,
+      26,
+      24,
+      null,
+      22,
+      19,
+      17,
+      null,
+      15,
+      17,
+      19,
+      null,
+      22,
+      null
+    ],
+    [
+      17,
+      null,
+      15,
+      null,
+      12,
+      10,
+      7,
+      null,
+      10,
+      null,
+      12,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  ],
+  "level_names": [
+    "وادي البذور",
+    "جسور الضباب",
+    "شقوق الغسق",
+    "قمم البلورات",
+    "غابة الأصداء",
+    "كهف الوهج",
+    "أطلال الريح",
+    "عرش الكسوف",
+    "غابة العودة",
+    "عرش النجوم"
+  ],
+  "skills": [
+    "الدبل قفز",
+    "اندفاع سريع",
+    "درع طاقة",
+    "قفزة ثالثة",
+    "انزلاق هوائي",
+    "موجة طاقة",
+    "تجديد الصحة",
+    "ليزر فائق"
+  ]
+}
